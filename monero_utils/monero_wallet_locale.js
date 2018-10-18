@@ -28,23 +28,22 @@
 //
 "use strict";
 //
-const monero_config = require("./monero_config");
-const monero_utils = require("./monero_cryptonote_utils_instance");
+const monero_wallet_utils = require("./monero_wallet_utils");
 //
-function IsTransactionConfirmed(tx, blockchain_height) {
-	return blockchain_height - tx.height > monero_config.txMinConfirms;
+function MnemonicWordsetNameWithLocale(
+	currentLocale, // e.g. 'en'
+) {
+	const mnemonicWordsetNamesByAppLocaleNames =
+		monero_wallet_utils.MnemonicWordsetNamesByAppLocaleNames;
+	if (currentLocale.indexOf("en") === 0) {
+		return mnemonicWordsetNamesByAppLocaleNames.English;
+	} else if (currentLocale.indexOf("es") === 0) {
+		return mnemonicWordsetNamesByAppLocaleNames.Spanish;
+	} else if (currentLocale.indexOf("pt") === 0) {
+		return mnemonicWordsetNamesByAppLocaleNames.Portuguese;
+	} else if (currentLocale.indexOf("ja") === 0) {
+		return mnemonicWordsetNamesByAppLocaleNames.Japanese;
+	}
+	return monero_wallet_utils.DefaultWalletMnemonicWordsetName; // which would be .English
 }
-exports.IsTransactionConfirmed = IsTransactionConfirmed;
-//
-function IsTransactionUnlocked(tx, blockchain_height) {
-	return monero_utils.is_tx_unlocked(tx.unlock_time || 0, blockchain_height);
-}
-exports.IsTransactionUnlocked = IsTransactionUnlocked;
-//
-function TransactionLockedReason(tx, blockchain_height) {
-	return monero_utils.tx_locked_reason(
-		tx.unlock_time || 0,
-		blockchain_height,
-	);
-}
-exports.TransactionLockedReason = TransactionLockedReason;
+exports.MnemonicWordsetNameWithLocale = MnemonicWordsetNameWithLocale;

@@ -29,6 +29,7 @@
 "use strict";
 //
 const monero_config = require("./monero_config");
+const monero_utils = require("./monero_cryptonote_utils_instance");
 //
 const URITypes = {
 	addressAsFirstPathComponent: 1,
@@ -89,7 +90,7 @@ function New_RequestFunds_URI(args) {
 }
 exports.New_RequestFunds_URI = New_RequestFunds_URI;
 //
-function New_ParsedPayload_FromPossibleRequestURIString(string, nettype, monero_utils/*pass this so this fn remains sync*/) {
+function New_ParsedPayload_FromPossibleRequestURIString(string, nettype) {
 	// throws; -> {}
 	//
 	// detect no-scheme moneroAddr and possible OA addr - if has no monero: prefix

@@ -1,15 +1,16 @@
 {
   "name": "mymonero-core-js",
-  "version": "1.1.0",
-  "description": "The JS library containing the Monero crypto plus lightweight wallet functions behind the official MyMonero apps",
+  "version": "1.1.1",
+  "description": "The JS library containing the Monero crypto plus lightweight wallet functions behind the official ZelCore application",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mymonero/mymonero-core-js.git"
+    "url": "git+https://github.com/TheTrunk/mymonero-core-js.git"
   },
   "scripts": {
     "format": "find . -name '*.js*' | xargs prettier --write --config ./.prettierrc --config-precedence file-override",
-    "test": "mocha"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [
     "monero",
@@ -24,23 +25,33 @@
     "utility",
     "tool"
   ],
+  "contributors": [
+    {
+      "name": "Tadeas Kmenta",
+      "email": "tadeas.kmenta@zel.cash"
+    }
+  ],
   "author": "MyMonero",
   "license": "See LICENSE.TXT. Copyright (c) 2014-2018, MyMonero.com. All rights reserved.",
   "bugs": {
-    "url": "https://github.com/mymonero/mymonero-core-js/issues"
+    "url": "https://github.com/TheTrunk/mymonero-core-js/issues"
   },
-  "homepage": "https://github.com/mymonero/mymonero-core-js#readme",
-  "dependencies": {},
+  "homepage": "https://github.com/TheTrunk/mymonero-core-js#readme",
+  "dependencies": {
+    "async": "^2.6.0",
+    "axios":"^0.18.0"
+  },
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "jest": "^23.1.0"
   },
   "jest": {
     "testEnvironment": "node",
-    "verbose": true,
     "coveragePathIgnorePatterns": [
       "node_modules",
-      "monero_utils/MyMoneroCoreCpp.js",
-      "tests/emjs/*"
+      "cryptonote_utils/biginteger.js",
+      "cryptonote_utils/nacl-fast-cn.js",
+      "cryptonote_utils/sha3.js",
+      "cryptonote_utils/cryptonote_crypto_EMSCRIPTEN.js"
     ]
-  }
+  },
 }

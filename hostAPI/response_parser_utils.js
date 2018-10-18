@@ -29,7 +29,7 @@
 "use strict";
 //
 const JSBigInt = require("../cryptonote_utils/biginteger").BigInteger;
-const monero_amount_format_utils = require("../monero_utils/monero_amount_format_utils");
+const monero_utils = require("../monero_utils/monero_cryptonote_utils_instance");
 const monero_keyImage_cache_utils = require("../monero_utils/monero_keyImage_cache_utils");
 //
 function Parsed_AddressInfo__sync(
@@ -39,7 +39,6 @@ function Parsed_AddressInfo__sync(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 ) {
 	// -> returnValuesByKey
 	const total_received = new JSBigInt(data.total_received || 0);
@@ -62,7 +61,6 @@ function Parsed_AddressInfo__sync(
 			view_key__private,
 			spend_key__public,
 			spend_key__private,
-			monero_utils,
 		);
 		if (spent_output.key_image !== key_image) {
 			// console.log('💬  Output used as mixin (' + spent_output.key_image + '/' + key_image + ')')
@@ -98,7 +96,6 @@ function Parsed_AddressInfo__sync__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 ) {
 	// -> returnValuesByKey
 	const keyImageCache = monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(
@@ -111,7 +108,6 @@ function Parsed_AddressInfo__sync__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 	);
 }
 function Parsed_AddressInfo(
@@ -121,7 +117,6 @@ function Parsed_AddressInfo(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 	fn, // (err?, returnValuesByKey) -> Void
 ) {
 	const returnValuesByKey = Parsed_AddressInfo__sync(
@@ -131,7 +126,6 @@ function Parsed_AddressInfo(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 	);
 	fn(null, returnValuesByKey);
 }
@@ -141,7 +135,6 @@ function Parsed_AddressInfo__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 	fn,
 ) {
 	// -> returnValuesByKey
@@ -152,7 +145,6 @@ function Parsed_AddressInfo__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 		fn,
 	);
 }
@@ -168,7 +160,6 @@ function Parsed_AddressTransactions(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 	fn, // (err?, returnValuesByKey) -> Void
 ) {
 	const returnValuesByKey = Parsed_AddressTransactions__sync(
@@ -178,7 +169,6 @@ function Parsed_AddressTransactions(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 	);
 	fn(null, returnValuesByKey);
 }
@@ -189,7 +179,6 @@ function Parsed_AddressTransactions__sync(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 ) {
 	const account_scanned_height = data.scanned_height || 0;
 	const account_scanned_block_height = data.scanned_block_height || 0;
@@ -211,7 +200,6 @@ function Parsed_AddressTransactions__sync(
 					view_key__private,
 					spend_key__public,
 					spend_key__private,
-					monero_utils,
 				);
 				if (transactions[i].spent_outputs[j].key_image !== key_image) {
 					// console.log('Output used as mixin, ignoring (' + transactions[i].spent_outputs[j].key_image + '/' + key_image + ')')
@@ -240,7 +228,7 @@ function Parsed_AddressTransactions__sync(
 			.subtract(transactions[i].total_sent || 0)
 			.toString();
 		transactions[i].approx_float_amount = parseFloat(
-			monero_amount_format_utils.formatMoney(transactions[i].amount),
+			monero_utils.formatMoney(transactions[i].amount),
 		);
 		transactions[i].timestamp = transactions[i].timestamp;
 		const record__payment_id = transactions[i].payment_id;
@@ -292,7 +280,6 @@ function Parsed_AddressTransactions__sync__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 ) {
 	const keyImageCache = monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(
 		address,
@@ -304,7 +291,6 @@ function Parsed_AddressTransactions__sync__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 	);
 }
 function Parsed_AddressTransactions__keyImageManaged(
@@ -313,7 +299,6 @@ function Parsed_AddressTransactions__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 	fn,
 ) {
 	Parsed_AddressTransactions(
@@ -323,7 +308,6 @@ function Parsed_AddressTransactions__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 		fn,
 	);
 }
@@ -339,7 +323,6 @@ function Parsed_UnspentOuts(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 	fn, // (err?, returnValuesByKey)
 ) {
 	const returnValuesByKey = Parsed_UnspentOuts__sync(
@@ -349,7 +332,6 @@ function Parsed_UnspentOuts(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 	);
 	fn(null, returnValuesByKey);
 }
@@ -360,7 +342,6 @@ function Parsed_UnspentOuts__sync(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils
 ) {
 	const data_outputs = data.outputs;
 	const finalized_unspentOutputs = data.outputs || []; // to finalize:
@@ -389,9 +370,9 @@ function Parsed_UnspentOuts__sync(
 				!finalized_unspentOutput_atI_beforeSplice ||
 				typeof finalized_unspentOutput_atI_beforeSplice === "undefined"
 			) {
-				// console.warn(
-				// 	`This unspent output at i ${i} was literally undefined! Skipping.`,
-				// ); // NOTE: Looks like the i-- code below should exit earlier if this is necessary
+				console.warn(
+					`This unspent output at i ${i} was literally undefined! Skipping.`,
+				); // NOTE: Looks like the i-- code below should exit earlier if this is necessary
 				continue;
 			}
 			const beforeSplice__tx_pub_key =
@@ -416,13 +397,12 @@ function Parsed_UnspentOuts__sync(
 				view_key__private,
 				spend_key__public,
 				spend_key__private,
-				monero_utils
 			);
 			if (
 				key_image ===
 				finalized_unspentOutput_atI_beforeSplice.spend_key_images[j]
 			) {
-				// console.log("💬  Output was spent; key image: " + key_image + " amount: " + monero_amount_format_utils.formatMoneyFull(finalized_unspentOutputs[i].amount));
+				// console.log("💬  Output was spent; key image: " + key_image + " amount: " + monero_utils.formatMoneyFull(finalized_unspentOutputs[i].amount));
 				// Remove output from list
 				finalized_unspentOutputs.splice(i, 1);
 				const finalized_unspentOutput_atI_afterSplice =
@@ -434,17 +414,17 @@ function Parsed_UnspentOuts__sync(
 				}
 				i--;
 			} else {
-				// console.log(
-				// 	"💬  Output used as mixin (" +
-				// 		key_image +
-				// 		"/" +
-				// 		finalized_unspentOutputs[i].spend_key_images[j] +
-				// 		")",
-				// );
+				console.log(
+					"💬  Output used as mixin (" +
+						key_image +
+						"/" +
+						finalized_unspentOutputs[i].spend_key_images[j] +
+						")",
+				);
 			}
 		}
 	}
-	// console.log("Unspent outs: " + JSON.stringify(finalized_unspentOutputs));
+	console.log("Unspent outs: " + JSON.stringify(finalized_unspentOutputs));
 	const unusedOuts = finalized_unspentOutputs.slice(0);
 	const returnValuesByKey = {
 		unspentOutputs: finalized_unspentOutputs,
@@ -459,7 +439,6 @@ function Parsed_UnspentOuts__sync__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 ) {
 	const keyImageCache = monero_keyImage_cache_utils.Lazy_KeyImageCacheForWalletWith(
 		address,
@@ -471,7 +450,6 @@ function Parsed_UnspentOuts__sync__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 	);
 }
 function Parsed_UnspentOuts__keyImageManaged(
@@ -480,7 +458,6 @@ function Parsed_UnspentOuts__keyImageManaged(
 	view_key__private,
 	spend_key__public,
 	spend_key__private,
-	monero_utils,
 	fn,
 ) {
 	Parsed_UnspentOuts(
@@ -490,7 +467,6 @@ function Parsed_UnspentOuts__keyImageManaged(
 		view_key__private,
 		spend_key__public,
 		spend_key__private,
-		monero_utils,
 		fn,
 	);
 }

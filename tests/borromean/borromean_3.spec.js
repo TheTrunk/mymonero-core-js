@@ -25,30 +25,17 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// This file is here merely to share configuration
-//
-exports.bridgedFn_names =
-[
-	"is_subaddress",
-	"is_integrated_address",
-	"new_payment_id",
-	"new__int_addr_from_addr_and_short_pid",
-	"decode_address",
-	"newly_created_wallet",
-	"are_equal_mnemonics",
-	"mnemonic_from_seed",
-	"seed_and_keys_from_mnemonic",
-	"validate_components_for_login",
-	"address_and_keys_from_seed",
-	"generate_key_image",
-	"generate_key_derivation",
-	"derive_public_key",
-	"derive_subaddress_public_key",
-	"decodeRct",
-	"estimate_rct_tx_size",
-	"calculate_fee",
-	"estimated_tx_network_fee",
-	"create_signed_transaction",
-	"create_signed_transaction__nonIPCsafe"
-];
+
+const monero_utils = require("../../").monero_utils;
+const { generate_parameters } = require("./test_parameters");
+const { indi, P1v, P2v, xv, N } = generate_parameters();
+
+it("borromean_3", () => {
+	//#true one again
+	indi[3] = `${(+indi[3] + 1) % 2}`;
+	indi[3] = `${(+indi[3] + 1) % 2}`;
+
+	const bb = monero_utils.genBorromean(xv, [P1v, P2v], indi, 2, N); /*?.*/
+	const valid = monero_utils.verifyBorromean(bb, P1v, P2v); /*?.*/
+	expect(valid).toBe(true);
+});

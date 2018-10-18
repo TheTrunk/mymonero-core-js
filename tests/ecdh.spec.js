@@ -25,48 +25,42 @@
 // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-"use strict";
-//
-const supported_short_codes = exports.supported_short_codes = 
-[
-	"en",
-	"nl", 
-	"fr",
-	"es",
-	"pt",
-	"ja",
-	"it",
-	"de", 
-	"ru",
-	"zh", // chinese (simplified)
-	"eo", 
-	"jbo" // Lojban
-];
-exports.mnemonic_languages =
-[
-	"English",
-	"Netherlands",
-	"Français",
-	"Español",
-	"Português",
-	"日本語",
-	"Italiano",
-	"Deutsch", 
-	"русский язык",
-	"简体中文 (中国)",
-	"Esperanto",
-	"Lojban"
-];
-exports.compatible_code_from_locale = function(locale_string)
-{
-	const supported_short_codes__length = supported_short_codes.length
-	for (var i = 0 ; i < supported_short_codes__length ; i++) {
-		const short_code = supported_short_codes[i]
-		if (locale_string.indexOf(short_code) == 0) {
-			return short_code
-		}
+
+const JSBigInt = require("../cryptonote_utils/biginteger").BigInteger;
+const monero_utils = require("../").monero_utils;
+
+it("ecdh_roundtrip", () => {
+	const test_amounts = [
+		new JSBigInt(1),
+		new JSBigInt(1),
+		new JSBigInt(2),
+		new JSBigInt(3),
+		new JSBigInt(4),
+		new JSBigInt(5),
+		new JSBigInt(10000),
+
+		new JSBigInt("10000000000000000000"),
+		new JSBigInt("10203040506070809000"),
+
+		new JSBigInt("123456789123456789"),
+	];
+
+	for (const amount of test_amounts) {
+		const k = monero_utils.skGen();
+		const scalar = monero_utils.skGen(); /*?*/
+		const amt = monero_utils.d2s(amount.toString());
+		const t0 = {
+			mask: scalar,
+			amount: amt,
+		};
+
+		// both are strings so we can shallow copy
+		let t1 = { ...t0 };
+
+		t1 = monero_utils.encode_rct_ecdh(t1, k);
+
+		t1 = monero_utils.decode_rct_ecdh(t1, k);
+		expect(t1.mask).toEqual(t0.mask);
+		expect(t1.amount).toEqual(t0.amount);
 	}
-	throw "Didn't find a code"
-	// return undefined
-}
+});
